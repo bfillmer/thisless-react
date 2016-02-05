@@ -2,7 +2,7 @@ import React from 'react';
 import { Subject } from 'rx';
 import { dom } from 'react-reactive-class';
 
-const { input:Input } = dom;
+const { input: Input } = dom;
 
 function toggleAll(props) {
   const { todos$, completedCount$ } = props;

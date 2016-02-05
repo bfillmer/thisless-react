@@ -3,7 +3,7 @@ import rootReducer from '../reducers';
 import {Subject} from 'rx';
 
 export default function configureStore(initialState) {
-  const store = createStore(rootReducer, initialState);
+  const store = (window.devToolsExtension ? window.devToolsExtension()(createStore) : createStore)(rootReducer, initialState);
 
   const state$ = new Subject();
   store.subscribe(() => {

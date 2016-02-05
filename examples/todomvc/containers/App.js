@@ -7,7 +7,7 @@ function app(props) {
 
   const {
     element: Header,
-    events: { save$ }
+    events: { save$ } // Passed here from Header.js
   } = header();
 
   const {
@@ -31,7 +31,7 @@ function app(props) {
   return {
     element,
     events: {
-      save$,
+      save$, // Pass up to index.js
       toggleAll$,
       clearCompleted$,
       deleteTodo$,
