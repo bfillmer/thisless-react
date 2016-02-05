@@ -10,6 +10,7 @@ import { bindActionCreators } from 'redux';
 import app from './containers/App';
 import configureStore from './store/configureStore';
 import * as TodoActions from './actions/todos';
+import * as TodoAPICalls from './api/todos';
 import 'todomvc-app-css/index.css';
 
 // Bind our events to Redux actions.
@@ -21,8 +22,19 @@ function handleEvent(store, events) {
   // Wrap our actions with Redux dispatch
   const actions = bindActionCreators(TodoActions, store.dispatch);
 
+  // Test, first attempt. Wrap our redux action in our api call. Stream
+  // gets update, store gets update, all works.
+  // Theory: We could pull the redux action out, have it be synchonous
+  // so the UI is snappy and responsive. Then have API call run, in the event
+  // of an error it rewinds Redux to the previous state and exposes and error,
+  // thus the UI is in sync with server data, but that only happens in the rare
+  // cases where we have an error sending data to server.
   events.save$.subscribe(
-    todo => actions.addTodo(todo)
+    todo => {
+      TodoAPICalls.addTodo(todo).then(() => {
+        actions.addTodo(todo)
+      })
+    }
   );
 
   events.toggleAll$.subscribe(
@@ -68,12 +80,3 @@ handleEvent(store, events);
 
 // Render our application.
 ReactDOM.render(App, document.getElementById('root'));
-
-// DIRTY TEST CODE
-
-
-// Yeah, so this works as expected.
-setTimeout(() => {
-  console.log('1.5 Seconds Later')
-  store.dispatch({ type: 'ADD_TODO', text: 'YOLO' })
-}, 1500)
